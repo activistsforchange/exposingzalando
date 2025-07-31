@@ -109,6 +109,13 @@
             text-decoration: none;
             cursor: pointer;
         }
+        .mobile-menu {
+            transition: transform 0.3s ease-in-out;
+            transform: translateX(100%); /* Start off-screen to the right */
+        }
+        .mobile-menu.active {
+            transform: translateX(0); /* Slide in */
+        }
     </style>
 </head>
 
@@ -137,10 +144,26 @@
         </div>
 
         <!-- Mobile Menu Button (Hamburger Icon) -->
-        <button class="md:hidden text-gray-600 hover:text-red-600 text-xl">
+        <button id="mobileMenuButton" class="md:hidden text-gray-600 hover:text-red-600 text-xl">
             <i class="fas fa-bars"></i>
         </button>
     </header>
+
+    <!-- Mobile Navigation Menu -->
+    <div id="mobileMenu" class="mobile-menu fixed top-0 right-0 w-64 h-full bg-white shadow-lg z-50 md:hidden">
+        <div class="flex justify-end p-4">
+            <button id="closeMobileMenuButton" class="text-gray-600 hover:text-red-600 text-xl">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <nav class="flex flex-col p-4 space-y-4 text-lg font-medium">
+            <a href="#" class="text-gray-600 hover:text-red-600 transition-colors py-2 px-4 rounded-md">HOME</a>
+            <a href="#seccampaign" class="text-gray-600 hover:text-red-600  transition-colors py-2 px-4 rounded-md">CAMPAIGN</a>
+            <a href="#secnews" class="text-gray-600 hover:text-red-600  transition-colors py-2 px-4 rounded-md">NEWS</a>
+            <a href="https://linktr.ee/exposingzalando"  target="_blank" class="text-gray-600 hover:text-red-600  transition-colors py-2 px-4 rounded-md">DOCUMENTS</a>
+            <a href="#seccontact" class="text-gray-600 hover:text-red-600 transition-colors">CONTACT</a>
+        </nav>
+    </div>
 
     <!-- Hero Section -->
     <section class="red-bg py-16 px-6 md:px-12 text-white text-center">
@@ -423,6 +446,11 @@
             const submissionMessage = document.getElementById('submissionMessage');
             const submitReportBtn = document.getElementById('submitReportBtn');
 
+            // Get elements for Mobile Menu
+            const mobileMenuButton = document.getElementById('mobileMenuButton');
+            const closeMobileMenuButton = document.getElementById('closeMobileMenuButton');
+            const mobileMenu = document.getElementById('mobileMenu');
+
             // When the user clicks the button, open the modal
             openReportModalBtn.onclick = function() {
                 reportModal.style.display = 'flex'; // Use flex to center
@@ -481,6 +509,26 @@
                 //     reportModal.style.display = 'none';
                 // }, 3000);
             });
+
+            // --- Mobile Menu Logic ---
+            mobileMenuButton.onclick = function() {
+                mobileMenu.classList.add('active'); // Show the menu
+            }
+
+            closeMobileMenuButton.onclick = function() {
+                mobileMenu.classList.remove('active'); // Hide the menu
+            }
+
+            // Close modal/menu if clicked outside content
+            window.onclick = function(event) {
+                if (event.target == reportModal) {
+                    reportModal.style.display = 'none';
+                }
+                // Only close mobile menu if the click is outside the menu and it's active
+                if (mobileMenu.classList.contains('active') && !mobileMenu.contains(event.target) && event.target !== mobileMenuButton) {
+                    mobileMenu.classList.remove('active');
+                }
+            }
         </script>
 
     </body>
