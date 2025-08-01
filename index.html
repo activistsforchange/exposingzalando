@@ -116,6 +116,21 @@
         .mobile-menu.active {
             transform: translateX(0); /* Slide in */
         }
+        /* Faded background image for the mobile menu */
+        .mobile-menu::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            /* Replace with your image URL */
+            background-image: linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)), url('https://exposingzalando.org/content/IMG_0742.jpeg');
+            background-size: cover;
+            background-position: center;
+            z-index: -1; /* Puts the background behind the menu content */
+            border-radius: inherit; /* Inherits the rounded corners */
+        }
     </style>
 </head>
 
@@ -148,20 +163,20 @@
             <i class="fas fa-bars"></i>
         </button>
     </header>
-
+    
     <!-- Mobile Navigation Menu -->
     <div id="mobileMenu" class="mobile-menu fixed top-0 right-0 w-64 h-full bg-white shadow-lg z-50 md:hidden">
         <div class="flex justify-end p-4">
-            <button id="closeMobileMenuButton" class="text-gray-600 hover:text-red-600 text-xl">
+            <button id="closeMobileMenuButton" class="text-gray-600 hover:text-red-600 text-xl p-2 rounded-md hover:bg-gray-100 transition-colors">
                 <i class="fas fa-times"></i>
             </button>
         </div>
-        <nav class="flex flex-col p-4 space-y-4 text-lg font-medium">
-            <a href="#" class="text-gray-600 hover:text-red-600 transition-colors py-2 px-4 rounded-md">HOME</a>
-            <a href="#seccampaign" class="text-gray-600 hover:text-red-600  transition-colors py-2 px-4 rounded-md">CAMPAIGN</a>
-            <a href="#secnews" class="text-gray-600 hover:text-red-600  transition-colors py-2 px-4 rounded-md">NEWS</a>
-            <a href="https://linktr.ee/exposingzalando"  target="_blank" class="text-gray-600 hover:text-red-600  transition-colors py-2 px-4 rounded-md">DOCUMENTS</a>
-            <a href="#seccontact" class="text-gray-600 hover:text-red-600 transition-colors">CONTACT</a>
+        <nav class="flex flex-col p-4 space-y-4 text-lg font-semibold">
+            <a href="#" class="dark-text hover:text-red-600 transition-colors py-2 px-4 rounded-md">HOME</a>
+            <a href="#seccampaign" class="dark-text hover:text-red-600  transition-colors py-2 px-4 rounded-md">CAMPAIGN</a>
+            <a href="#secnews" class="dark-text hover:text-red-600  transition-colors py-2 px-4 rounded-md">NEWS</a>
+            <a href="https://linktr.ee/exposingzalando"  target="_blank" class="dark-text hover:text-red-600 transition-colors py-2 px-4 rounded-md">DOCUMENTS</a>
+            <a href="#seccontact" class="dark-text hover:text-red-600 transition-colors py-2 px-4 rounded-md">CONTACT</a>
         </nav>
     </div>
 
@@ -511,24 +526,25 @@
             });
 
             // --- Mobile Menu Logic ---
-            mobileMenuButton.onclick = function() {
+            mobileMenuButton.addEventListener('click', function() {
                 mobileMenu.classList.add('active'); // Show the menu
-            }
+            });
 
-            closeMobileMenuButton.onclick = function() {
+            closeMobileMenuButton.addEventListener('click', function() {
                 mobileMenu.classList.remove('active'); // Hide the menu
-            }
+            });
 
             // Close modal/menu if clicked outside content
-            window.onclick = function(event) {
-                if (event.target == reportModal) {
-                    reportModal.style.display = 'none';
-                }
-                // Only close mobile menu if the click is outside the menu and it's active
-                if (mobileMenu.classList.contains('active') && !mobileMenu.contains(event.target) && event.target !== mobileMenuButton) {
+            window.addEventListener('click', function(event) {
+                // Check if the click is outside both the mobile menu and the button
+                if (mobileMenu.classList.contains('active') && !mobileMenu.contains(event.target) && !mobileMenuButton.contains(event.target)) {
                     mobileMenu.classList.remove('active');
                 }
-            }
+                // Close the report modal if clicked outside
+                if (event.target === reportModal) {
+                    reportModal.style.display = 'none';
+                }
+            });
         </script>
 
     </body>
