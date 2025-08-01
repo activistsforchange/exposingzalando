@@ -131,14 +131,28 @@
             z-index: -1; /* Puts the background behind the menu content */
             border-radius: inherit; /* Inherits the rounded corners */
         }
+
+        /* New custom style for mobile header background */
+        @media (max-width: 768px) {
+            .mobile-header-bg {
+                background-image: linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)), url('https://exposingzalando.org/content/IMG_0742.jpeg');
+                background-size: cover;
+                background-position: center;
+            }
+            .mobile-header-text {
+                /* Ensures text remains readable over the background image */
+                background-color: transparent;
+                position: relative;
+                z-index: 10;
+            }
     </style>
 </head>
 
 <body class="text-gray-800">
     <!-- Header Section -->
-    <header class="bg-white shadow-sm py-0 px-6 md:px-12 flex justify-between items-center">
+    <header class="mobile-header-bg bg-white shadow-sm py-0 px-6 md:px-12 flex justify-between items-center">
         <!-- Logo -->
-        <div class="flex items-center ">
+        <div class="flex items-center mobile-header-text">
             <img src="https://exposingzalando.org/content/IMG_0672.jpeg" style="width:95px; height:auto; margin-top:4px; margin-bottom:4px; padding-top:4px; padding-bottom:4px;" alt="Logo">
         </div>
 
@@ -152,13 +166,13 @@
         </nav>
 
         <!-- Search and User Icons (Hidden on small screens, shown on medium and up) -->
-        <div class="hidden md:flex items-center space-x-4">
+        <div class="hidden md:flex items-center space-x-4 mobile-header-text">
             <button class="text-gray-600 hover:text-red-600"><i class="fas fa-search"></i></button>
             <button class="text-gray-600 hover:text-red-600"><i class="fas fa-user"></i></button>
         </div>
 
         <!-- Mobile Menu Button (Hamburger Icon) -->
-        <button id="mobileMenuButton" class="md:hidden text-gray-600 hover:text-red-600 text-xl">
+        <button id="mobileMenuButton" class="md:hidden text-gray-600 hover:text-red-600 text-xl mobile-header-text">
             <i class="fas fa-bars"></i>
         </button>
     </header>
@@ -231,7 +245,7 @@
                 
                 <!-- Poster Section -->
                 <div class="flex justify-center items-center">
-                    <img src="https://exposingzalando.org/content/IMG_0736.png" alt="campaign poster" />
+                    <img src="https://exposingzalando.org/content/IMG_0744.png" alt="campaign poster" />
                 </div>
             </div>
         </div>
