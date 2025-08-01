@@ -135,7 +135,6 @@
 </head>
 
 <body class="text-gray-800">
-
     <!-- Header Section -->
     <header class="bg-white shadow-sm py-0 px-6 md:px-12 flex justify-between items-center">
         <!-- Logo -->
@@ -171,7 +170,7 @@
                 <i class="fas fa-times"></i>
             </button>
         </div>
-        <nav class="flex flex-col p-4 space-y-4 text-lg font-semibold">
+        <nav class="flex flex-col p-4 space-y-4 text-lg font-black">
             <a href="#" class="dark-text hover:text-red-600 transition-colors py-2 px-4 rounded-md">HOME</a>
             <a href="#seccampaign" class="dark-text hover:text-red-600  transition-colors py-2 px-4 rounded-md">CAMPAIGN</a>
             <a href="#secnews" class="dark-text hover:text-red-600  transition-colors py-2 px-4 rounded-md">NEWS</a>
@@ -204,27 +203,32 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                 <!-- Campaign Details -->
                 <div class="text-left">
-                    <p class="text-lg text-gray-700 mb-6">
-                        On <strong class="font-semibold">Thanksgiving Day(Nov 27, 2025)</strong>, which marks the beginning of Zalando's biggest shopping event, Cyberweek, we call on you to take a stand. Instead of participating in their greedy sales, we urge you to join the <strong class="font-semibold">#DeleteZalandoDay</strong> campaign.
+                    <p class="text-lg text-gray-700 mb-5">
+                        On <strong class="font-semibold">Thanksgiving Day(Nov 27, 2025)</strong>, which marks the beginning of Zalando's biggest shopping event, Cyberweek, we call on you to take a stand. Instead of participating in Zalando's greedy sales, we urge you to join the <strong class="font-semibold">#DeleteZalandoDay</strong> campaign.
                     </p>
-                    <p class="text-lg text-gray-700 mb-6">
+                    <p class="text-lg text-gray-700 mb-4">
                         Your action is simple but powerful:
                     </p>
-                    <ol class="list-decimal list-inside text-left text-gray-700 space-y-3 mb-8">
+                    <ol class="list-decimal list-inside text-left text-gray-700 space-y-3 mb-4">
                         <li><strong class="font-semibold">Delete your Zalando account.</strong></li>
                         <li><strong class="font-semibold">Take a screenshot</strong> of the account deletion confirmation.</li>
                         <li><strong class="font-semibold">Tweet the screenshot to @zalando on Twitter/X</strong> with the message:</li> <span class="bg-red-100 text-red-700 px-3 py-1 rounded-md font-mono text-base inline-block mt-2">"Reject Genocide!"</span>
                     </ol>
-                    <p class="text-lg text-gray-700 mb-6">
+                    <p class="text-lg text-gray-700 mb-5">
                         Let's send a clear message that our values are not for sale.
                     </p>
-                    <a href="howtodelete.html">
-                    <button class="red-bg text-white font-semibold py-3 px-8 rounded-full shadow-lg hover:bg-red-800 transition-colors">
-                        LEARN HOW TO DELETE YOUR ACCOUNT
-                    </button>
-                    </a>
+                    <div class="flex flex-col space-y-4">
+                        <a href="delete-account-page.html" class="red-bg text-white font-semibold py-3 px-8 rounded-full shadow-lg hover:bg-red-800 transition-colors inline-block">
+                            LEARN HOW TO DELETE YOUR ACCOUNT
+                        </a>
+                        <!-- New Add to Calendar Button -->
+                        <button id="addToCalendarBtn" class="bg-white text-red-700 font-semibold py-3 px-8 rounded-full shadow-lg hover:bg-gray-100 transition-colors">
+                            <i class="fas fa-calendar-plus mr-2"></i> Add to your calendar
+                        </button>
+                    </div>
                 </div>
 
+                
                 <!-- Poster Section -->
                 <div class="flex justify-center items-center">
                     <img src="https://exposingzalando.org/content/IMG_0736.png" alt="campaign poster" />
@@ -545,6 +549,39 @@
                     reportModal.style.display = 'none';
                 }
             });
+
+            // --- Add to Calendar Logic ---
+            addToCalendarBtn.addEventListener('click', function() {
+                const eventTitle = "Delete Zalando Day: Reject Genocide!";
+                const eventDescription = "Join the campaign by deleting your Zalando account and tweeting a screenshot with the message 'Reject Genocide!'. This event marks the start of Zalando's Cyberweek.";
+                // This date is a placeholder for the fourth Thursday of November 2024.
+                // Please update this date for future years.
+                const eventDate = "20241128";
+
+                const icsContent = `BEGIN:VCALENDAR
+            VERSION:2.0
+            BEGIN:VEVENT
+            DTSTART;VALUE=DATE:${eventDate}
+            DTEND;VALUE=DATE:${eventDate}
+            SUMMARY:${eventTitle}
+            DESCRIPTION:${eventDescription}
+            END:VEVENT
+            END:VCALENDAR`;
+
+                // Create a Blob from the ICS content
+                const blob = new Blob([icsContent], { type: 'text/calendar' });
+                const url = URL.createObjectURL(blob);
+
+                // Create a temporary link to trigger the download
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = 'Delete-Zalando-Day.ics';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+            });
+            </script>
         </script>
 
     </body>
