@@ -1,625 +1,720 @@
-<!DOCTYPE html>
-<html lang="en">
+    <!DOCTYPE html>
+    <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zalando Workers United</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Inter font from Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8f8f8;
-            /* Light gray background */
-        }
-
-        .red-bg {
-            background-color: #C0292E;
-            /* Custom red color from design */
-        }
-
-        .light-gray-bg {
-            background-color: #EFEBEA;
-            /* Light gray background for certain sections */
-        }
-
-        .dark-text {
-            color: #333;
-            /* Dark text color */
-        }
-
-        .light-text {
-            color: #fff;
-            /* Light text color */
-        }
-
-        .border-red {
-            border-color: #C0292E;
-        }
-
-        h1 { 
-            font-style: normal;
-            font-weight: 600;
-            font-size: 30px;
-            line-height: 1.5;
-            letter-spacing: -0.047em;
-            font-family: 'Open Sans', sans-serif;
-        }
-        /* Custom scrollbar for better aesthetics */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 10px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #888;
-            border-radius: 10px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #555;
-        }
-
-        /* Modal specific styles */
-        .modal {
-            display: none; /* Hidden by default */
-            position: fixed; /* Stay in place */
-            z-index: 1000; /* Sit on top */
-            left: 0;
-            top: 0;
-            width: 100%; /* Full width */
-            height: 100%; /* Full height */
-            overflow: auto; /* Enable scroll if needed */
-            background-color: rgba(0,0,0,0.6); /* Black w/ opacity */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .modal-content {
-            background-color: #fefefe;
-            margin: auto;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            width: 90%;
-            max-width: 500px;
-            position: relative;
-        }
-        .close-button {
-            color: #aaa;
-            position: absolute;
-            top: 10px;
-            right: 20px;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        .close-button:hover,
-        .close-button:focus {
-            color: #C0292E;
-            text-decoration: none;
-            cursor: pointer;
-        }
-        .mobile-menu {
-            transition: transform 0.3s ease-in-out;
-            transform: translateX(100%); /* Start off-screen to the right */
-        }
-        .mobile-menu.active {
-            transform: translateX(0); /* Slide in */
-        }
-        /* Faded background image for the mobile menu */
-        .mobile-menu::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-image: linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)), url('https://exposingzalando.org/content/IMG_0742.jpeg');
-            background-size: cover;
-            background-position: center;
-            z-index: -1; /* Puts the background behind the menu content */
-            border-radius: inherit; /* Inherits the rounded corners */
-        }
-
-        .mobile-header-bg {
-            background-image: linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)), url('https://exposingzalando.org/content/IMG_0742.jpeg');
-            background-size: cover;
-            background-position: center;
-        }
-        
-        /* New custom style for mobile header background */
-        @media (max-width: 768px) {
-            .mobile-header-text {
-                /* Ensures text remains readable over the background image */
-                background-color: transparent;
-                position: relative;
-                z-index: 10;
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Zalando Workers United</title>
+        <!-- Tailwind CSS CDN -->
+        <script src="https://cdn.tailwindcss.com"></script>
+        <!-- Font Awesome for icons -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        <!-- Inter font from Google Fonts -->
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        <style>
+            body {
+                font-family: 'Inter', sans-serif;
+                background-color: #f8f8f8;
+                /* Light gray background */
             }
-        }   
-    </style>
-</head>
 
-<body class="text-gray-800">
-    <!-- Header Section -->
-    <header class="mobile-header-bg bg-white shadow-sm py-0 px-4 md:px-12 flex justify-between items-center">
-        <!-- Logo -->
-        <div class="flex items-center mobile-header-text">
-            <img src="https://exposingzalando.org/content/IMG_0745.png" style="width:95px; height:auto; margin-top:4px; margin-bottom:4px; padding-top:4px; padding-bottom:4px;" alt="Logo">
-        </div>
+            .red-bg {
+                background-color: #C0292E;
+                /* Custom red color from design */
+            }
 
-        <!-- New transparent button in the middle for mobile screens -->
-        <div class="flex-grow justify-center flex md:hidden">
-            <button id="openReportModalMobile" class="bg-transparent text-gray-600 border border-gray-600 font-bold py-2 px-4 rounded-full shadow-lg hover:bg-red-50 transition-colors">
-                Share Your Story
-            </button>
-        </div>
+            .light-gray-bg {
+                background-color: #EFEBEA;
+                /* Light gray background for certain sections */
+            }
 
-        <!-- Navigation Links (Hidden on small screens, shown on medium and up) -->
-        <nav class="hidden md:flex space-x-8 text-lg font-bold">
-            <a href="#" class="text-gray-600 hover:text-red-600 transition-colors">HOME</a>
-            <a href="#seccampaign" class="text-gray-600 hover:text-red-600 transition-colors">CAMPAIGN</a>
-            <a href="#secnews" class="text-gray-600 hover:text-red-600 transition-colors">NEWS</a>
-            <a href="https://linktr.ee/exposingzalando"  target="_blank" class="text-gray-600 hover:text-red-600 transition-colors">DOCUMENTS</a>
-            <a href="#seccontact" class="text-gray-600 hover:text-red-600 transition-colors">CONTACT</a>
-        </nav>
+            .dark-text {
+                color: #333;
+                /* Dark text color */
+            }
 
-        <!-- Search and User Icons (Hidden on small screens, shown on medium and up) -->
-        <div class="hidden md:flex items-center space-x-4 mobile-header-text">
-            <button class="text-gray-600 hover:text-red-600"><i class="fas fa-search"></i></button>
-            <button class="text-gray-600 hover:text-red-600"><i class="fas fa-user"></i></button>
-        </div>
+            .light-text {
+                color: #fff;
+                /* Light text color */
+            }
 
-        <!-- Mobile Menu Button (Hamburger Icon) -->
-        <button id="mobileMenuButton" class="md:hidden text-gray-600 hover:text-red-600 text-xl mobile-header-text">
-            <i class="fas fa-bars"></i>
-        </button>
-    </header>
-    
-    <!-- Mobile Navigation Menu -->
-    <div id="mobileMenu" class="mobile-menu fixed top-0 right-0 w-64 h-full bg-white shadow-lg z-50 md:hidden">
-        <div class="flex justify-end p-4">
-            <button id="closeMobileMenuButton" class="text-gray-600 hover:text-red-600 text-xl p-2 rounded-md hover:bg-gray-100 transition-colors">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <nav class="flex flex-col p-4 space-y-4 text-lg font-black">
-            <a href="#" class="dark-text hover:text-red-600 transition-colors py-2 px-4 rounded-md">HOME</a>
-            <a href="#seccampaign" class="dark-text hover:text-red-600  transition-colors py-2 px-4 rounded-md">CAMPAIGN</a>
-            <a href="#secnews" class="dark-text hover:text-red-600  transition-colors py-2 px-4 rounded-md">NEWS</a>
-            <a href="https://linktr.ee/exposingzalando"  target="_blank" class="dark-text hover:text-red-600 transition-colors py-2 px-4 rounded-md">DOCUMENTS</a>
-            <a href="#seccontact" class="dark-text hover:text-red-600 transition-colors py-2 px-4 rounded-md">CONTACT</a>
-        </nav>
-    </div>
+            .border-red {
+                border-color: #C0292E;
+            }
 
-    <!-- Hero Section -->
-    <section class="red-bg py-16 px-6 md:px-12 text-white text-center">
-        <div class="max-w-4xl mx-auto">
-            <h2 class="text-xl md:text-3xl font-extrabold leading-tight mb-6 rounded-lg">
-                WE ARE A COLLECTIVE OF CURRENT AND FORMER ZALANDO EMPLOYEES ORGANIZING AGAINST ZALANDO'S INTIMIDATION, CENSORSHIP, AND RETALIATION TOWARDS WORKERS WHO STAND WITH PALESTINE.
-            </h2>
-            <a href="https://www.instagram.com/exposingzalando" target="_blank">
-            <button 
-                class="bg-white text-red-700 font-semibold py-3 px-8 rounded-full shadow-lg hover:bg-gray-100 transition-colors">
-                    JOIN OUR MOVEMENT
+            h1 { 
+                font-style: normal;
+                font-weight: 600;
+                font-size: 30px;
+                line-height: 1.5;
+                letter-spacing: -0.047em;
+                font-family: 'Open Sans', sans-serif;
+            }
+            /* Custom scrollbar for better aesthetics */
+            ::-webkit-scrollbar {
+                width: 8px;
+            }
+
+            ::-webkit-scrollbar-track {
+                background: #f1f1f1;
+                border-radius: 10px;
+            }
+
+            ::-webkit-scrollbar-thumb {
+                background: #888;
+                border-radius: 10px;
+            }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: #555;
+            }
+
+            /* Modal specific styles */
+            .modal {
+                display: none; /* Hidden by default */
+                position: fixed; /* Stay in place */
+                z-index: 1000; /* Sit on top */
+                left: 0;
+                top: 0;
+                width: 100%; /* Full width */
+                height: 100%; /* Full height */
+                overflow: auto; /* Enable scroll if needed */
+                background-color: rgba(0,0,0,0.6); /* Black w/ opacity */
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            .modal-content {
+                background-color: #fefefe;
+                margin: auto;
+                padding: 30px;
+                border-radius: 10px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+                width: 90%;
+                max-width: 500px;
+                position: relative;
+            }
+            .close-button {
+                color: #aaa;
+                position: absolute;
+                top: 10px;
+                right: 20px;
+                font-size: 28px;
+                font-weight: bold;
+                cursor: pointer;
+            }
+            .close-button:hover,
+            .close-button:focus {
+                color: #C0292E;
+                text-decoration: none;
+                cursor: pointer;
+            }
+            .mobile-menu {
+                transition: transform 0.3s ease-in-out;
+                transform: translateX(100%); /* Start off-screen to the right */
+            }
+            .mobile-menu.active {
+                transform: translateX(0); /* Slide in */
+            }
+            /* Faded background image for the mobile menu */
+            .mobile-menu::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-image: linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)), url('https://exposingzalando.org/content/IMG_0742.jpeg');
+                background-size: cover;
+                background-position: center;
+                z-index: -1; /* Puts the background behind the menu content */
+                border-radius: inherit; /* Inherits the rounded corners */
+            }
+
+            .mobile-header-bg {
+                background-image: linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)), url('https://exposingzalando.org/content/IMG_0742.jpeg');
+                background-size: cover;
+                background-position: center;
+            }
+
+            /* New custom style for mobile header background */
+            @media (max-width: 768px) {
+                .mobile-header-text {
+                    /* Ensures text remains readable over the background image */
+                    background-color: transparent;
+                    position: relative;
+                    z-index: 10;
+                }
+            }
+
+            /* Hide scrollbar for horizontal carousels */
+            .hide-scrollbar::-webkit-scrollbar {
+                display: none;
+            }
+            .hide-scrollbar {
+                -ms-overflow-style: none;  /* IE and Edge */
+                scrollbar-width: none;  /* Firefox */
+            }
+
+            /* New carousel styles to override animation */
+            @media (max-width: 768px) {
+                .carousel-container {
+                    scroll-snap-type: x mandatory;
+                }
+                .carousel-item {
+                    scroll-snap-align: center;
+                }
+            }
+
+            /* Styles for the pagination dots */
+            .dot {
+                display: inline-block;
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                background-color: #ccc;
+                cursor: pointer;
+                transition: background-color 0.3s;
+            }
+            .dot.active {
+                background-color: #C0292E;
+            }
+        </style>
+    </head>
+
+    <body class="text-gray-800">
+        <!-- Header Section -->
+        <header class="mobile-header-bg bg-white shadow-sm py-0 px-4 md:px-12 flex justify-between items-center">
+            <!-- Logo -->
+            <div class="flex items-center mobile-header-text">
+                <img src="https://exposingzalando.org/content/IMG_0745.png" style="width:95px; height:auto; margin-top:4px; margin-bottom:4px; padding-top:4px; padding-bottom:4px;" alt="Logo">
+            </div>
+
+            <!-- New transparent button in the middle for mobile screens -->
+            <div class="flex-grow justify-center flex md:hidden">
+                <button id="openReportModalMobile" class="bg-transparent text-gray-600 border border-gray-600 font-bold py-2 px-4 rounded-full shadow-lg hover:bg-red-50 transition-colors">
+                    Share Your Story
                 </button>
-            </a>
+            </div>
+
+            <!-- Navigation Links (Hidden on small screens, shown on medium and up) -->
+            <nav class="hidden md:flex space-x-8 text-lg font-bold">
+                <a href="#" class="text-gray-600 hover:text-red-600 transition-colors">HOME</a>
+                <a href="#seccampaign" class="text-gray-600 hover:text-red-600 transition-colors">CAMPAIGN</a>
+                <a href="#secnews" class="text-gray-600 hover:text-red-600 transition-colors">NEWS</a>
+                <a href="https://linktr.ee/exposingzalando"  target="_blank" class="text-gray-600 hover:text-red-600 transition-colors">DOCUMENTS</a>
+                <a href="#seccontact" class="text-gray-600 hover:text-red-600 transition-colors">CONTACT</a>
+            </nav>
+
+            <!-- Search and User Icons (Hidden on small screens, shown on medium and up) -->
+            <div class="hidden md:flex items-center space-x-4 mobile-header-text">
+                <button class="text-gray-600 hover:text-red-600"><i class="fas fa-search"></i></button>
+                <button class="text-gray-600 hover:text-red-600"><i class="fas fa-user"></i></button>
+            </div>
+
+            <!-- Mobile Menu Button (Hamburger Icon) -->
+            <button id="mobileMenuButton" class="md:hidden text-gray-600 hover:text-red-600 text-xl mobile-header-text">
+                <i class="fas fa-bars"></i>
+            </button>
+        </header>
+
+        <!-- Mobile Navigation Menu -->
+        <div id="mobileMenu" class="mobile-menu fixed top-0 right-0 w-64 h-full bg-white shadow-lg z-50 md:hidden">
+            <div class="flex justify-end p-4">
+                <button id="closeMobileMenuButton" class="text-gray-600 hover:text-red-600 text-xl p-2 rounded-md hover:bg-gray-100 transition-colors">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <nav class="flex flex-col p-4 space-y-4 text-lg font-black">
+                <a href="#" class="dark-text hover:text-red-600 transition-colors py-2 px-4 rounded-md">HOME</a>
+                <a href="#seccampaign" class="dark-text hover:text-red-600  transition-colors py-2 px-4 rounded-md">CAMPAIGN</a>
+                <a href="#secnews" class="dark-text hover:text-red-600  transition-colors py-2 px-4 rounded-md">NEWS</a>
+                <a href="https://linktr.ee/exposingzalando"  target="_blank" class="dark-text hover:text-red-600 transition-colors py-2 px-4 rounded-md">DOCUMENTS</a>
+                <a href="#seccontact" class="dark-text hover:text-red-600 transition-colors py-2 px-4 rounded-md">CONTACT</a>
+            </nav>
         </div>
-    </section>
 
-    <!-- Delete Zalando Day Section - MOVED TO SECOND POSITION -->
-    <section id="seccampaign" class="py-16 px-6 md:px-12 bg-gray-100 text-center">
-        <div class="max-w-4xl mx-auto">
-            <h2 class="text-3xl md:text-4xl font-bold mb-8 text-red-700">
-                JOIN OUR CAMPAIGN!
-            </h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-                <!-- Campaign Details -->
-                <div class="text-left">
-                    <p class="text-lg text-gray-700 mb-5">
-                        On <strong class="font-semibold">Thanksgiving Day(Nov 27, 2025)</strong>, which marks the beginning of Zalando's biggest shopping event, Cyberweek, we call on you to take a stand. Instead of participating in Zalando's greedy sales, we urge you to join the <strong class="font-semibold">#DeleteZalandoDay</strong> campaign.
-                    </p>
-                    <p class="text-lg text-gray-700 mb-4">
-                        Your action is simple but powerful:
-                    </p>
-                    <ol class="list-decimal list-inside text-left text-gray-700 space-y-3 mb-4">
-                        <li><strong class="font-semibold">Delete your Zalando account.</strong></li>
-                        <li><strong class="font-semibold">Take a screenshot</strong> of the account deletion confirmation.</li>
-                        <li><strong class="font-semibold">Tweet the screenshot to @zalando on Twitter/X</strong> with the message:</li> <span class="bg-red-100 text-red-700 px-3 py-1 rounded-md font-mono text-base inline-block mt-2">"Reject Genocide!"</span>
-                    </ol>
-                    <p class="text-lg text-gray-700 mb-5">
-                        Let's send a clear message that our values are not for sale.
-                    </p>
-                    <div class="flex flex-col space-y-4">
-                        <a href="howtodelete.html" class="red-bg text-white font-semibold py-3 px-8 rounded-full shadow-lg hover:bg-red-800 transition-colors inline-block">
-                            LEARN HOW TO DELETE YOUR ACCOUNT
-                        </a>
-                        <!-- New Add to Calendar Button -->
-                        <button id="addToCalendarBtn" class="bg-white text-red-700 font-semibold py-3 px-8 rounded-full shadow-lg hover:bg-gray-100 transition-colors">
-                            <i class="fas fa-calendar-plus mr-2"></i> Add to your calendar
-                        </button>
-                    </div>
-                </div>
-
-                
-                <!-- Poster Section -->
-                <div class="flex justify-center items-center">
-                    <img src="https://exposingzalando.org/content/IMG_0744.png" alt="campaign poster" />
-                </div>
-            </div>
-        </div>
-    </section>
-
-
-    <!-- Featured Articles Section -->
-    <section id="secnews"  class="py-10  px-6 md:px-12 bg-white">
-        <h2 class="text-2xl font-bold mb-8 text-center md:text-left">Recent Posts</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <!-- Article 1 -->
-            <div class="bg-gray-50 rounded-lg shadow-md ">
-                <img src="https://exposingzalando.org/content/IMG_0648.jpeg" alt="Article 1"
-                    class="w-full h-112 object-cover">
-                <div class="p-6">
-                    <span class="text-xs font-semibold text-red-600 uppercase mb-2 block">News</span>
-                    <h3 class="text-lg font-bold mb-2">Europe's Largest Zionist Online Fashion Store</h3>
-                    <p class="text-sm text-gray-600 mb-4">
-                        It is time to add Zalando to your boycott list! Zalando's near monopoly does not give them the right to silence and intimidate their employees for Pro-Palestinian solidarity
-                    </p>
-                    <a href="https://linktr.ee/exposingzalando" target="_blank" class="text-red-600 font-semibold text-sm hover:underline">Read                          More <i class="fas fa-arrow-right ml-1"></i></a>
-                </div>
-            </div>
-            <!-- Article 2 -->
-            <div class="bg-gray-50 rounded-lg shadow-md overflow-hidden">
-                <img src="https://exposingzalando.org/content/IMG_0646.webp" alt="Article 2"
-                    class="w-full h-112 object-cover">
-                <div class="p-6">
-                    <span class="text-xs font-semibold text-red-600 uppercase mb-2 block">News</span>
-                    <h3 class="text-lg font-bold mb-2">Zalando Added In No Thanks! Boycott List</h3>
-                    <p class="text-sm text-gray-600 mb-4">
-                        The #ExposingZalando campaign is shedding light on Zalando. Whistleblowers, both former and current employees, come forward with disturbing testimonies about its Zionist policies and Islamophobic tendencies.
-                    </p>
-                    <a href="https://www.instagram.com/p/DMS7EGytWUs" target="_blank"
-                        class="text-red-600 font-semibold text-sm hover:underline">Read More <i
-                            class="fas fa-arrow-right ml-1"></i></a>
-                </div>
-            </div>
-            <!-- Article 3 -->
-            <div class="bg-gray-50 rounded-lg shadow-md overflow-hidden">
-                <img src="https://exposingzalando.org/content/IMG_0638.png" alt="Article 3"
-                    class="w-full h-112 object-cover">
-                <div class="p-6">
-                    <span class="text-xs font-semibold text-red-600 uppercase mb-2 block">Statement</span>
-                    <h3 class="text-lg font-bold mb-2">IJAN Germany's Statement On Zalando</h3>
-                    <p class="text-sm text-gray-600 mb-4">
-                        The Right to Reject zionism Campaign & International Jewish Anti-Zionist Network (IJAN) strongly condemn the Discriminatory, Racist Actions of Zalando towards its Employees.
-                    </p>
-                    <a href="https://www.instagram.com/p/DLpEayHtj1K" target="_blank"
-                        class="text-red-600 font-semibold text-sm hover:underline">Read More <i
-                            class="fas fa-arrow-right ml-1"></i></a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Featured Articles Section Bottom -->
-    <section class="py-2 px-6 md:px-12 pb-10 bg-white">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <!-- Article 1 -->
-            <div class="bg-gray-50 rounded-lg shadow-md ">
-                <img src="https://exposingzalando.org/content/IMG_0668.png" alt="Article 1"
-                    class="w-full h-112 object-cover">
-                <div class="p-6">
-                    <span class="text-xs font-semibold text-red-600 uppercase mb-2 block">News</span>
-                    <h3 class="text-lg font-bold mb-2">Zalando Added In Liberation.48 Boycott List</h3>
-                    <p class="text-sm text-gray-600 mb-4">
-                        Islamophobic Zalando actively attacks its Muslim employees' labour and civil rights for voicing Pro-Palestinian Views.
-                    </p>
-                    <a href="https://www.instagram.com/p/DJSKzIZIJFz" target="_blank" 
-                        class="text-red-600 font-semibold text-sm hover:underline">Read More <i
-                            class="fas fa-arrow-right ml-1"></i></a>
-                </div>
-            </div>
-            <!-- Article 2 -->
-            <div class="bg-gray-50 rounded-lg shadow-md overflow-hidden">
-                <img src="https://exposingzalando.org/content/IMG_6080.jpeg" alt="Article 2"
-                    class="w-full h-112 object-cover">
-                <div class="p-6">
-                    <span class="text-xs font-semibold text-red-600 uppercase mb-2 block">News</span>
-                    <h3 class="text-lg font-bold mb-2">Zalando Added In Boycat App's Boycott List</h3>
-                    <p class="text-sm text-gray-600 mb-4">
-                        Europe's largest online fashion retailer Zalando has been added to the Boycat app's "Boycott Apartheid" campaign.
-                    </p>
-                    <a href="https://www.boycat.io/brands/Zalando" target="_blank"
-                        class="text-red-600 font-semibold text-sm hover:underline">Read More <i
-                            class="fas fa-arrow-right ml-1"></i></a>
-                </div>
-            </div>
-            <!-- Article 3 -->
-            <div class="bg-gray-50 rounded-lg shadow-md overflow-hidden">
-                <img src="https://exposingzalando.org/content/IMG_0642_scaled.png" alt="Article 3"
-                    class="w-full h-112 object-cover">
-                <div class="p-6">
-                    <span class="text-xs font-semibold text-red-600 uppercase mb-2 block">Update</span>
-                    <h3 class="text-lg font-bold mb-2">Zalando's Strategy: Monitor, Don't Engage</h3>
-                    <p class="text-sm text-gray-600 mb-4">
-                        Zalando's Zionist influence extends to its Compliance, Human Resources departments and even to its Works Council.
-                    </p>
-                    <a href="https://www.instagram.com/p/DI3WxTeMoX4" target="_blank"
-                        class="text-red-600 font-semibold text-sm hover:underline">Read More <i
-                            class="fas fa-arrow-right ml-1"></i></a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-
-    
-
-    <!-- Document/Read More Section -->
-    <section class="py-16 px-6 md:px-12 light-gray-bg">
-        <h2 class="text-3xl md:text-4xl font-bold mb-8 text-red-700">
-            Our Purpose and Mission
-        </h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <!-- Column 1: Document -->
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <h3 class="text-xl font-bold mb-4 dark-text">DOCUMENT</h3>
-                <h4 class="text-lg font-semibold mb-2">Uncovering the Truth</h4>
-                <p class="text-sm text-gray-600 mb-4">
-                    Our primary objective is to meticulously document the incidents, testimonies, and systemic issues that expose Zalando's alleged discriminatory behavior towards pro-Palestine supporters, especially those from Muslim backgrounds. We conduct thorough investigations and periodically post accounts that reveal Zalando’s Zionist and Facist stance. This includes:
-                </p>
-                <ul class="list-disc list-inside text-sm text-gray-600 space-y-1">
-                    <li>Collecting and analyzing anonymous testimonies from current and former employees detailing instances of repression, intimidation, and silencing.</li>
-                    <li>Highlighting specific cases, such as the pressure to remove Palestinian symbolism like the watermelon emoji under threat of termination.</li>
-                    <li>Uncovering the patterns that suggest a systemic, premeditated, and organized effort to intimidate employees out of their Palestinian solidarity, rather than isolated incidents.</li>
-                    <li>Investigating the company's policies, such as the alleged ban of culturally significant items like the Keffiyeh pattern, demonizing Palestinian identity itself.</li>
-                </ul>
-                <a href="https://linktr.ee/exposingzalando" target="_blank" class="text-red-600 font-semibold text-sm hover:underline mt-4 block">View Employee Testimonies <i class="fas fa-download ml-1"></i></a>
-            </div>
-            <!-- Column 2: Apply -->
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <h3 class="text-xl font-bold mb-4 dark-text">AMPLIFY</h3>
-                <h4 class="text-lg font-semibold mb-2">Spreading Awareness</h4>
-                <p class="text-sm text-gray-600 mb-4">
-                    Once documented, our crucial next step is to amplify these findings to the widest possible audience. We believe that transparency and public awareness are key to holding Zalando accountable. Our efforts include:
-                </p>
-                <ul class="list-disc list-inside text-sm text-gray-600 space-y-1">
-                    <li>Publicizing the results of our investigation, clearly showing the alleged Islamophobia and anti-Palestine sentiment plaguing Zalando's higher ranks, which we believe they try to hide behind a facade of "Fostering Diversity & Inclusion".</li>
-                    <li>Utilizing platforms like this website and social media, leveraging hashtags such as #ExposeZalando and #BoycottZalando, to reach customers, shareholders, and the general public.</li>
-                    <li>Highlighting the company's perceived incompetence and mismanagement due to its aggressive political stance, especially given its customer-centric business model and competitive market.</li>
-                    <li>Drawing attention to the financial ties and influence of major shareholders and political figures that may contribute to Zalando's alleged anti-Palestine posture.</li>
-                </ul>
-                <a href="https://www.instagram.com/exposingzalando" target="_blank" class="text-red-600 font-semibold text-sm hover:underline mt-4 block">Share Our Posts <i
-                        class="fas fa-external-link-alt ml-1"></i></a>
-            </div>
-            <!-- Column 3: Mobilize -->
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <h3 class="text-xl font-bold mb-4 dark-text">MOBILIZE</h3>
-                <h4 class="text-lg font-semibold mb-2">Get Involved Today</h4>
-                <p class="text-sm text-gray-600 mb-4">
-                    Finally, our ultimate goal is to mobilize collective action. We seek to empower individuals and organizations to act in solidarity with affected employees and the Palestinian cause, for example, through the "Delete Zalando Day" Campaign. We demand concrete changes from Zalando, including:
-                </p>
-                <ul class="list-disc list-inside text-sm text-gray-600 space-y-1">
-                    <li>An immediate halt to the persecution of employees displaying Palestine solidarity symbols or engaging in pro-Palestine activism.</li>
-                    <li>A public, unequivocal apology for the recent incidents and the broader culture of repression, discrimination, and silence the company has fostered.</li>
-                    <li>A transparent review and overhaul process to fundamentally dismantle the toxic, fear-based hierarchical culture that allows discrimination and repression to flourish.</li>
-                    <li>Reparations for those harmed—including reinstatement, compensation, and support for employees unjustly disciplined or dismissed because of their religious identity, political beliefs, or cultural expression.</li>
-                </ul>
-                <a href="#seccampaign" class="text-red-600 font-semibold text-sm hover:underline mt-4 block">Boycott Zalando<i
-                        class="fas fa-hand-rock ml-1"></i></a>
-            </div>
-        </div>
-    </section>
-
-        <!-- Footer Banner -->
-        <section id="seccontact" class="red-bg py-16 px-6 md:px-12 text-white text-center">
-            <div class="max-w-3xl mx-auto">
-                <h2 class="text-2xl md:text-3xl font-bold mb-4">
-                    HAVE YOU FACED OR WITNESSED ANTI-PALESTINIAN DISCRIMINATION OR RETALIATION IN GERMANY?
+        <!-- Hero Section -->
+        <section class="red-bg py-16 px-6 md:px-12 text-white text-center">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-xl md:text-3xl font-extrabold leading-tight mb-6 rounded-lg">
+                    WE ARE A COLLECTIVE OF CURRENT AND FORMER ZALANDO EMPLOYEES ORGANIZING AGAINST ZALANDO'S INTIMIDATION, CENSORSHIP, AND RETALIATION TOWARDS WORKERS WHO STAND WITH PALESTINE.
                 </h2>
-                <p class="text-lg mb-6">
-                    We are here to help. Share your experience confidentially.
-                </p>
-                <button id="openReportModal" class="bg-white text-red-700 font-semibold py-3 px-8 rounded-full shadow-lg hover:bg-gray-100 transition-colors">
-                    SHARE YOUR STORY
-                </button>
+                <a href="https://www.instagram.com/exposingzalando" target="_blank">
+                <button 
+                    class="bg-white text-red-700 font-semibold py-3 px-8 rounded-full shadow-lg hover:bg-gray-100 transition-colors">
+                        JOIN OUR MOVEMENT
+                    </button>
+                </a>
             </div>
         </section>
 
-        <!-- Footer -->
-        <footer class="bg-gray-800 text-gray-300 py-8 px-6 md:px-12 text-sm">
-            <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center">
-                <div class="mb-4 md:mb-0">
-                    <p>&copy; 2023 Zalando Workers United. All rights reserved.</p>
-                </div>
-                <div class="flex space-x-4">
-                    <a href="#" class="hover:text-white transition-colors"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="hover:text-white transition-colors"><i class="fab fa-twitter"></i></a>
-                    <a href="https://www.instagram.com/exposingzalando" class="hover:text-white transition-colors"><i class="fab fa-instagram"></i></a>
-                    <a href="https://www.linkedin.com/in/mohamad-saad-780004314" class="hover:text-white transition-colors"><i class="fab fa-linkedin-in"></i></a>
+        <!-- Delete Zalando Day Section - MOVED TO SECOND POSITION -->
+        <section id="seccampaign" class="py-16 px-6 md:px-12 bg-gray-100 text-center">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-3xl md:text-4xl font-bold mb-8 text-red-700">
+                    JOIN OUR CAMPAIGN!
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                    <!-- Campaign Details -->
+                    <div class="text-left">
+                        <p class="text-lg text-gray-700 mb-5">
+                            On <strong class="font-semibold">Thanksgiving Day(Nov 27, 2025)</strong>, which marks the beginning of Zalando's biggest shopping event, Cyberweek, we call on you to take a stand. Instead of participating in Zalando's greedy sales, we urge you to join the <strong class="font-semibold">#DeleteZalandoDay</strong> campaign.
+                        </p>
+                        <p class="text-lg text-gray-700 mb-4">
+                            Your action is simple but powerful:
+                        </p>
+                        <ol class="list-decimal list-inside text-left text-gray-700 space-y-3 mb-4">
+                            <li><strong class="font-semibold">Delete your Zalando account.</strong></li>
+                            <li><strong class="font-semibold">Take a screenshot</strong> of the account deletion confirmation.</li>
+                            <li><strong class="font-semibold">Tweet the screenshot to @zalando on Twitter/X</strong> with the message:</li> <span class="bg-red-100 text-red-700 px-3 py-1 rounded-md font-mono text-base inline-block mt-2">"Reject Genocide!"</span>
+                        </ol>
+                        <p class="text-lg text-gray-700 mb-5">
+                            Let's send a clear message that our values are not for sale.
+                        </p>
+                        <div class="flex flex-col space-y-4">
+                            <a href="howtodelete.html" class="red-bg text-white font-semibold py-3 px-8 rounded-full shadow-lg hover:bg-red-800 transition-colors inline-block">
+                                LEARN HOW TO DELETE YOUR ACCOUNT
+                            </a>
+                            <!-- New Add to Calendar Button -->
+                            <button id="addToCalendarBtn" class="bg-white text-red-700 font-semibold py-3 px-8 rounded-full shadow-lg hover:bg-gray-100 transition-colors">
+                                <i class="fas fa-calendar-plus mr-2"></i> Add to your calendar
+                            </button>
+                        </div>
+                    </div>
+
+
+                    <!-- Poster Section -->
+                    <div class="flex justify-center items-center">
+                        <img src="https://exposingzalando.org/content/IMG_0744.png" alt="campaign poster" />
+                    </div>
                 </div>
             </div>
-        </footer>
+        </section>
 
-        <!-- Report Submission Modal -->
-        <div id="reportModal" class="modal hidden">
-            <div class="modal-content">
-                <span class="close-button" id="closeReportModal">&times;</span>
-                <h3 class="text-2xl font-bold mb-6 text-center text-red-700">Share Your Story Confidentially</h3>
-                <form id="reportForm" class="space-y-4">
-                    <div>
-                        <label for="reporterName" class="block text-gray-700 text-sm font-bold mb-2">Your Name (Optional):</label>
-                        <input type="text" id="reporterName" name="reporterName" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Enter your name">
+
+        <!-- Featured Articles Section -->
+        <section id="secnews" class="pt-16 pb-8 bg-white carousel-section">
+            <h2 class="text-2xl font-bold mb-8 text-center px-6 md:px-12 md:text-left">Recent Posts</h2>
+            <!-- Carousel Container -->
+            <div id="recent-posts-carousel" class="flex flex-row space-x-8 overflow-x-auto px-6 hide-scrollbar md:grid md:grid-cols-3 md:gap-8 md:space-x-0">
+                <!-- Article 1 -->
+                <div id="recent-post-1" class="carousel-item flex-none w-[85vw] md:w-auto bg-gray-50 rounded-lg shadow-md overflow-hidden">
+                    <img src="https://exposingzalando.org/content/IMG_0648.jpeg" alt="Article 1"
+                        class="w-full h-112 object-cover">
+                    <div class="p-6">
+                        <span class="text-xs font-semibold text-red-600 uppercase mb-2 block">News</span>
+                        <h3 class="text-lg font-bold mb-2">Europe's Largest Zionist Online Fashion Store</h3>
+                        <p class="text-sm text-gray-600 mb-4">
+                            It is time to add Zalando to your boycott list! Zalando's near monopoly does not give them the right to silence and intimidate their employees for Pro-Palestinian solidarity
+                        </p>
+                        <a href="https://linktr.ee/exposingzalando" target="_blank" class="text-red-600 font-semibold text-sm hover:underline">Read                          More <i class="fas fa-arrow-right ml-1"></i></a>
                     </div>
-                    <div>
-                        <label for="reporterEmail" class="block text-gray-700 text-sm font-bold mb-2">Your Email (Optional, for follow-up):</label>
-                        <input type="email" id="reporterEmail" name="reporterEmail" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="your.email@example.com">
+                </div>
+                <!-- Article 2 -->
+                <div id="recent-post-2" class="carousel-item flex-none w-[85vw] md:w-auto bg-gray-50 rounded-lg shadow-md overflow-hidden">
+                    <img src="https://exposingzalando.org/content/IMG_0646.webp" alt="Article 2"
+                        class="w-full h-112 object-cover">
+                    <div class="p-6">
+                        <span class="text-xs font-semibold text-red-600 uppercase mb-2 block">News</span>
+                        <h3 class="text-lg font-bold mb-2">Zalando Added In No Thanks! Boycott List</h3>
+                        <p class="text-sm text-gray-600 mb-4">
+                            The #ExposingZalando campaign is shedding light on Zalando. Whistleblowers, both former and current employees, come forward with disturbing testimonies about its Zionist policies and Islamophobic tendencies.
+                        </p>
+                        <a href="https://www.instagram.com/p/DMS7EGytWUs" target="_blank"
+                            class="text-red-600 font-semibold text-sm hover:underline">Read More <i
+                                class="fas fa-arrow-right ml-1"></i></a>
                     </div>
-                    <div>
-                        <label for="reportContent" class="block text-gray-700 text-sm font-bold mb-2">Your Report (Required):</label>
-                        <textarea id="reportContent" name="reportContent" rows="8" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Describe your experience here..." required></textarea>
+                </div>
+                <!-- Article 3 -->
+                <div id="recent-post-3" class="carousel-item flex-none w-[85vw] md:w-auto bg-gray-50 rounded-lg shadow-md overflow-hidden">
+                    <img src="https://exposingzalando.org/content/IMG_0638.png" alt="Article 3"
+                        class="w-full h-112 object-cover">
+                    <div class="p-6">
+                        <span class="text-xs font-semibold text-red-600 uppercase mb-2 block">Statement</span>
+                        <h3 class="text-lg font-bold mb-2">IJAN Germany's Statement On Zalando</h3>
+                        <p class="text-sm text-gray-600 mb-4">
+                            The Right to Reject zionism Campaign & International Jewish Anti-Zionist Network (IJAN) strongly condemn the Discriminatory, Racist Actions of Zalando towards its Employees.
+                        </p>
+                        <a href="https://www.instagram.com/p/DLpEayHtj1K" target="_blank"
+                            class="text-red-600 font-semibold text-sm hover:underline">Read More <i
+                                class="fas fa-arrow-right ml-1"></i></a>
                     </div>
-                    <button type="submit" id="submitReportBtn" class="red-bg text-white font-semibold py-2 px-6 rounded-full shadow-lg hover:bg-red-800 transition-colors w-full">
-                        Submit Report
+                </div>
+            </div>
+            <!-- Pagination dots for Recent Posts -->
+            <div class="flex justify-center mt-4 space-x-2 px-6 md:px-12 md:hidden">
+                <button class="dot active" data-carousel-target="recent-posts-carousel" data-slide-to="0"></button>
+                <button class="dot" data-carousel-target="recent-posts-carousel" data-slide-to="1"></button>
+                <button class="dot" data-carousel-target="recent-posts-carousel" data-slide-to="2"></button>
+            </div>
+        </section>
+
+        <!-- Featured Articles Section Bottom -->
+        <!-- Updates/News Section -->
+        <section class="py-8 bg-gray-100 carousel-section">
+            <!-- Carousel Container -->
+            <div id="updates-carousel" class="flex flex-row space-x-8 overflow-x-auto px-6 hide-scrollbar md:grid md:grid-cols-3 md:gap-8 md:space-x-0">
+                <!-- News Card 1 -->
+                <div id="update-1" class="carousel-item flex-none w-[85vw] md:w-auto bg-white rounded-lg shadow-md p-6 flex flex-col items-start">
+                    <img src="https://exposingzalando.org/content/IMG_0668.png" alt="Article 1"
+                        class="w-full h-112 object-cover">
+                    <div class="p-6">
+                        <span class="text-xs font-semibold text-red-600 uppercase mb-2 block">News</span>
+                        <h3 class="text-lg font-bold mb-2">Zalando Added In Liberation.48 Boycott List</h3>
+                        <p class="text-sm text-gray-600 mb-4">
+                            Islamophobic Zalando actively attacks its Muslim employees' labour and civil rights for voicing Pro-Palestinian Views.
+                        </p>
+                        <a href="https://www.instagram.com/p/DJSKzIZIJFz" target="_blank" 
+                            class="text-red-600 font-semibold text-sm hover:underline">Read More <i
+                                class="fas fa-arrow-right ml-1"></i></a>
+                    </div>
+                </div>
+                <!-- Article 2 -->
+                <div id="update-2" class="carousel-item flex-none w-[85vw] md:w-auto bg-white rounded-lg shadow-md p-6 flex flex-col items-start">
+                    <img src="https://exposingzalando.org/content/IMG_6080.jpeg" alt="Article 2"
+                        class="w-full h-112 object-cover">
+                    <div class="p-6">
+                        <span class="text-xs font-semibold text-red-600 uppercase mb-2 block">News</span>
+                        <h3 class="text-lg font-bold mb-2">Zalando Added In Boycat App's Boycott List</h3>
+                        <p class="text-sm text-gray-600 mb-4">
+                            Europe's largest online fashion retailer Zalando has been added to the Boycat app's "Boycott Apartheid" campaign.
+                        </p>
+                        <a href="https://www.boycat.io/brands/Zalando" target="_blank"
+                            class="text-red-600 font-semibold text-sm hover:underline">Read More <i
+                                class="fas fa-arrow-right ml-1"></i></a>
+                    </div>
+                </div>
+                <!-- Article 3 -->
+                <div id="update-3" class="carousel-item flex-none w-[85vw] md:w-auto bg-white rounded-lg shadow-md p-6 flex flex-col items-start">
+                    <img src="https://exposingzalando.org/content/IMG_0642_scaled.png" alt="Article 3"
+                        class="w-full h-112 object-cover">
+                    <div class="p-6">
+                        <span class="text-xs font-semibold text-red-600 uppercase mb-2 block">Update</span>
+                        <h3 class="text-lg font-bold mb-2">Zalando's Strategy: Monitor, Don't Engage</h3>
+                        <p class="text-sm text-gray-600 mb-4">
+                            Zalando's Zionist influence extends to its Compliance, Human Resources departments and even to its Works Council.
+                        </p>
+                        <a href="https://www.instagram.com/p/DI3WxTeMoX4" target="_blank"
+                            class="text-red-600 font-semibold text-sm hover:underline">Read More <i
+                                class="fas fa-arrow-right ml-1"></i></a>
+                    </div>
+                </div>
+            </div>
+            <!-- Pagination dots for Updates/News -->
+            <div class="flex justify-center mt-4 space-x-2 px-6 md:px-12 md:hidden">
+                <button class="dot active" data-carousel-target="updates-carousel" data-slide-to="0"></button>
+                <button class="dot" data-carousel-target="updates-carousel" data-slide-to="1"></button>
+                <button class="dot" data-carousel-target="updates-carousel" data-slide-to="2"></button>
+            </div
+                <div class="md:pd-12"></div>
+        </section>
+
+
+        <!-- Document/Read More Section -->
+        <section class="py-16 px-6 md:px-12 light-gray-bg">
+            <h2 class="text-3xl md:text-4xl font-bold mb-8 text-red-700">
+                Our Purpose and Mission
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Column 1: Document -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="text-xl font-bold mb-4 dark-text">DOCUMENT</h3>
+                    <h4 class="text-lg font-semibold mb-2">Uncovering the Truth</h4>
+                    <p class="text-sm text-gray-600 mb-4">
+                        Our primary objective is to meticulously document the incidents, testimonies, and systemic issues that expose Zalando's alleged discriminatory behavior towards pro-Palestine supporters, especially those from Muslim backgrounds. We conduct thorough investigations and periodically post accounts that reveal Zalando’s Zionist and Facist stance. This includes:
+                    </p>
+                    <ul class="list-disc list-inside text-sm text-gray-600 space-y-1">
+                        <li>Collecting and analyzing anonymous testimonies from current and former employees detailing instances of repression, intimidation, and silencing.</li>
+                        <li>Highlighting specific cases, such as the pressure to remove Palestinian symbolism like the watermelon emoji under threat of termination.</li>
+                        <li>Uncovering the patterns that suggest a systemic, premeditated, and organized effort to intimidate employees out of their Palestinian solidarity, rather than isolated incidents.</li>
+                        <li>Investigating the company's policies, such as the alleged ban of culturally significant items like the Keffiyeh pattern, demonizing Palestinian identity itself.</li>
+                    </ul>
+                    <a href="https://linktr.ee/exposingzalando" target="_blank" class="text-red-600 font-semibold text-sm hover:underline mt-4 block">View Employee Testimonies <i class="fas fa-download ml-1"></i></a>
+                </div>
+                <!-- Column 2: Apply -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="text-xl font-bold mb-4 dark-text">AMPLIFY</h3>
+                    <h4 class="text-lg font-semibold mb-2">Spreading Awareness</h4>
+                    <p class="text-sm text-gray-600 mb-4">
+                        Once documented, our crucial next step is to amplify these findings to the widest possible audience. We believe that transparency and public awareness are key to holding Zalando accountable. Our efforts include:
+                    </p>
+                    <ul class="list-disc list-inside text-sm text-gray-600 space-y-1">
+                        <li>Publicizing the results of our investigation, clearly showing the alleged Islamophobia and anti-Palestine sentiment plaguing Zalando's higher ranks, which we believe they try to hide behind a facade of "Fostering Diversity & Inclusion".</li>
+                        <li>Utilizing platforms like this website and social media, leveraging hashtags such as #ExposeZalando and #BoycottZalando, to reach customers, shareholders, and the general public.</li>
+                        <li>Highlighting the company's perceived incompetence and mismanagement due to its aggressive political stance, especially given its customer-centric business model and competitive market.</li>
+                        <li>Drawing attention to the financial ties and influence of major shareholders and political figures that may contribute to Zalando's alleged anti-Palestine posture.</li>
+                    </ul>
+                    <a href="https://www.instagram.com/exposingzalando" target="_blank" class="text-red-600 font-semibold text-sm hover:underline mt-4 block">Share Our Posts <i
+                            class="fas fa-external-link-alt ml-1"></i></a>
+                </div>
+                <!-- Column 3: Mobilize -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="text-xl font-bold mb-4 dark-text">MOBILIZE</h3>
+                    <h4 class="text-lg font-semibold mb-2">Get Involved Today</h4>
+                    <p class="text-sm text-gray-600 mb-4">
+                        Finally, our ultimate goal is to mobilize collective action. We seek to empower individuals and organizations to act in solidarity with affected employees and the Palestinian cause, for example, through the "Delete Zalando Day" Campaign. We demand concrete changes from Zalando, including:
+                    </p>
+                    <ul class="list-disc list-inside text-sm text-gray-600 space-y-1">
+                        <li>An immediate halt to the persecution of employees displaying Palestine solidarity symbols or engaging in pro-Palestine activism.</li>
+                        <li>A public, unequivocal apology for the recent incidents and the broader culture of repression, discrimination, and silence the company has fostered.</li>
+                        <li>A transparent review and overhaul process to fundamentally dismantle the toxic, fear-based hierarchical culture that allows discrimination and repression to flourish.</li>
+                        <li>Reparations for those harmed—including reinstatement, compensation, and support for employees unjustly disciplined or dismissed because of their religious identity, political beliefs, or cultural expression.</li>
+                    </ul>
+                    <a href="#seccampaign" class="text-red-600 font-semibold text-sm hover:underline mt-4 block">Boycott Zalando<i
+                            class="fas fa-hand-rock ml-1"></i></a>
+                </div>
+            </div>
+        </section>
+
+            <!-- Footer Banner -->
+            <section id="seccontact" class="red-bg py-16 px-6 md:px-12 text-white text-center">
+                <div class="max-w-3xl mx-auto">
+                    <h2 class="text-2xl md:text-3xl font-bold mb-4">
+                        HAVE YOU FACED OR WITNESSED ANTI-PALESTINIAN DISCRIMINATION OR RETALIATION IN GERMANY?
+                    </h2>
+                    <p class="text-lg mb-6">
+                        We are here to help. Share your experience confidentially.
+                    </p>
+                    <button id="openReportModal" class="bg-white text-red-700 font-semibold py-3 px-8 rounded-full shadow-lg hover:bg-gray-100 transition-colors">
+                        SHARE YOUR STORY
                     </button>
-                </form>
-                <p id="submissionMessage" class="mt-4 text-center text-sm text-gray-600 hidden">
-                    Your email client should open shortly with your report. Please click 'Send' to complete the submission.
-                </p>
+                </div>
+            </section>
+
+            <!-- Footer -->
+            <footer class="bg-gray-800 text-gray-300 py-8 px-6 md:px-12 text-sm">
+                <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center">
+                    <div class="mb-4 md:mb-0">
+                        <p>&copy; 2023 Zalando Workers United. All rights reserved.</p>
+                    </div>
+                    <div class="flex space-x-4">
+                        <a href="#" class="hover:text-white transition-colors"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="hover:text-white transition-colors"><i class="fab fa-twitter"></i></a>
+                        <a href="https://www.instagram.com/exposingzalando" class="hover:text-white transition-colors"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.linkedin.com/in/mohamad-saad-780004314" class="hover:text-white transition-colors"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+            </footer>
+
+            <!-- Report Submission Modal -->
+            <div id="reportModal" class="modal hidden">
+                <div class="modal-content">
+                    <span class="close-button" id="closeReportModal">&times;</span>
+                    <h3 class="text-2xl font-bold mb-6 text-center text-red-700">Share Your Story Confidentially</h3>
+                    <form id="reportForm" class="space-y-4">
+                        <div>
+                            <label for="reporterName" class="block text-gray-700 text-sm font-bold mb-2">Your Name (Optional):</label>
+                            <input type="text" id="reporterName" name="reporterName" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Enter your name">
+                        </div>
+                        <div>
+                            <label for="reporterEmail" class="block text-gray-700 text-sm font-bold mb-2">Your Email (Optional, for follow-up):</label>
+                            <input type="email" id="reporterEmail" name="reporterEmail" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="your.email@example.com">
+                        </div>
+                        <div>
+                            <label for="reportContent" class="block text-gray-700 text-sm font-bold mb-2">Your Report (Required):</label>
+                            <textarea id="reportContent" name="reportContent" rows="8" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Describe your experience here..." required></textarea>
+                        </div>
+                        <button type="submit" id="submitReportBtn" class="red-bg text-white font-semibold py-2 px-6 rounded-full shadow-lg hover:bg-red-800 transition-colors w-full">
+                            Submit Report
+                        </button>
+                    </form>
+                    <p id="submissionMessage" class="mt-4 text-center text-sm text-gray-600 hidden">
+                        Your email client should open shortly with your report. Please click 'Send' to complete the submission.
+                    </p>
+                </div>
             </div>
-        </div>
 
-        <script>
-            // Get the modal and the button that opens it
-            const reportModal = document.getElementById('reportModal');
-            const openReportModalBtn = document.getElementById('openReportModal');
-            const closeReportModalBtn = document.getElementById('closeReportModal');
-            const reportForm = document.getElementById('reportForm');
-            const submissionMessage = document.getElementById('submissionMessage');
-            const submitReportBtn = document.getElementById('submitReportBtn');
+            <script>
+                // Get the modal and the button that opens it
+                const reportModal = document.getElementById('reportModal');
+                const openReportModalBtn = document.getElementById('openReportModal');
+                const closeReportModalBtn = document.getElementById('closeReportModal');
+                const reportForm = document.getElementById('reportForm');
+                const submissionMessage = document.getElementById('submissionMessage');
+                const submitReportBtn = document.getElementById('submitReportBtn');
 
-            // Get elements for Mobile Menu
-            const mobileMenuButton = document.getElementById('mobileMenuButton');
-            const closeMobileMenuButton = document.getElementById('closeMobileMenuButton');
-            const mobileMenu = document.getElementById('mobileMenu');
+                // Get elements for Mobile Menu
+                const mobileMenuButton = document.getElementById('mobileMenuButton');
+                const closeMobileMenuButton = document.getElementById('closeMobileMenuButton');
+                const mobileMenu = document.getElementById('mobileMenu');
 
-            // Get the new mobile header button
-            const openReportModalMobileBtn = document.getElementById('openReportModalMobile');
+                // Get the new mobile header button
+                const openReportModalMobileBtn = document.getElementById('openReportModalMobile');
 
-            // Get the new Add to Calendar button
-            const addToCalendarBtn = document.getElementById('addToCalendarBtn');
+                // Get the new Add to Calendar button
+                const addToCalendarBtn = document.getElementById('addToCalendarBtn');
 
-            // --- Report Modal Logic ---
-            function openReportModalHandler() {
-                reportModal.style.display = 'flex';
-                submissionMessage.classList.add('hidden');
-                reportForm.reset();
-                submissionMessage.classList.remove('text-red-600', 'text-green-600');
-            }
+                // --- Report Modal Logic ---
+                function openReportModalHandler() {
+                    reportModal.style.display = 'flex';
+                    submissionMessage.classList.add('hidden');
+                    reportForm.reset();
+                    submissionMessage.classList.remove('text-red-600', 'text-green-600');
+                }
 
-            openReportModalBtn.addEventListener('click', openReportModalHandler);
-            openReportModalMobileBtn.addEventListener('click', openReportModalHandler);
-            
-            /* // When the user clicks the button, open the modal
-            openReportModalBtn.onclick = function() {
-                reportModal.style.display = 'flex'; // Use flex to center
-                submissionMessage.classList.add('hidden'); // Hide message on open
-                reportForm.reset(); // Clear form fields
-                submitReportBtn.disabled = false; // Ensure button is enabled
-                submissionMessage.classList.remove('text-red-600', 'text-green-600'); // Clear previous message styles
-            }*/
+                openReportModalBtn.addEventListener('click', openReportModalHandler);
+                openReportModalMobileBtn.addEventListener('click', openReportModalHandler);
 
-            // When the user clicks on <span> (x), close the modal
-            closeReportModalBtn.onclick = function() {
-                reportModal.style.display = 'none';
-            }
+                /* // When the user clicks the button, open the modal
+                openReportModalBtn.onclick = function() {
+                    reportModal.style.display = 'flex'; // Use flex to center
+                    submissionMessage.classList.add('hidden'); // Hide message on open
+                    reportForm.reset(); // Clear form fields
+                    submitReportBtn.disabled = false; // Ensure button is enabled
+                    submissionMessage.classList.remove('text-red-600', 'text-green-600'); // Clear previous message styles
+                }*/
 
-            // When the user clicks anywhere outside of the modal content, close it
-            window.onclick = function(event) {
-                if (event.target == reportModal) {
+                // When the user clicks on <span> (x), close the modal
+                closeReportModalBtn.onclick = function() {
                     reportModal.style.display = 'none';
                 }
-            }
 
-            // Handle form submission using mailto:
-            reportForm.addEventListener('submit', function(event) {
-                event.preventDefault(); // Prevent default form submission
-
-                const reporterName = document.getElementById('reporterName').value.trim();
-                const reporterEmail = document.getElementById('reporterEmail').value.trim();
-                const reportContent = document.getElementById('reportContent').value.trim();
-
-                if (!reportContent) {
-                    submissionMessage.textContent = "Please enter your report content.";
-                    submissionMessage.classList.remove('hidden');
-                    submissionMessage.classList.remove('text-gray-600', 'text-green-600');
-                    submissionMessage.classList.add('text-red-600');
-                    return;
+                // When the user clicks anywhere outside of the modal content, close it
+                window.onclick = function(event) {
+                    if (event.target == reportModal) {
+                        reportModal.style.display = 'none';
+                    }
                 }
 
-                const recipient = 'exposingzalando@proton.me';
-                const subject = encodeURIComponent('Confidential Report: Anti-Palestinian Discrimination/Retaliation');
-                let body = `Name: ${reporterName || 'Not provided (Anonymous)'}\n`;
-                body += `Email: ${reporterEmail || 'Not provided (Anonymous)'}\n\n`;
-                body += `Report:\n${reportContent}`;
+                // Handle form submission using mailto:
+                reportForm.addEventListener('submit', function(event) {
+                    event.preventDefault(); // Prevent default form submission
 
-                const mailtoLink = `mailto:${recipient}?subject=${subject}&body=${encodeURIComponent(body)}`;
+                    const reporterName = document.getElementById('reporterName').value.trim();
+                    const reporterEmail = document.getElementById('reporterEmail').value.trim();
+                    const reportContent = document.getElementById('reportContent').value.trim();
 
-                // Open the user's default email client
-                window.location.href = mailtoLink;
+                    if (!reportContent) {
+                        submissionMessage.textContent = "Please enter your report content.";
+                        submissionMessage.classList.remove('hidden');
+                        submissionMessage.classList.remove('text-gray-600', 'text-green-600');
+                        submissionMessage.classList.add('text-red-600');
+                        return;
+                    }
 
-                // Display message to the user
-                submissionMessage.textContent = "Your email client should open shortly with your report. Please click 'Send' to complete the submission.";
-                submissionMessage.classList.remove('hidden', 'text-red-600');
-                submissionMessage.classList.add('text-gray-600');
+                    const recipient = 'exposingzalando@proton.me';
+                    const subject = encodeURIComponent('Confidential Report: Anti-Palestinian Discrimination/Retaliation');
+                    let body = `Name: ${reporterName || 'Not provided (Anonymous)'}\n`;
+                    body += `Email: ${reporterEmail || 'Not provided (Anonymous)'}\n\n`;
+                    body += `Report:\n${reportContent}`;
 
-                // Optionally, you might want to close the modal after a short delay
-                // setTimeout(() => {
-                //     reportModal.style.display = 'none';
-                // }, 3000);
-            });
+                    const mailtoLink = `mailto:${recipient}?subject=${subject}&body=${encodeURIComponent(body)}`;
 
-            // --- Mobile Menu Logic ---
-            mobileMenuButton.addEventListener('click', function() {
-                mobileMenu.classList.add('active'); // Show the menu
-            });
+                    // Open the user's default email client
+                    window.location.href = mailtoLink;
 
-            closeMobileMenuButton.addEventListener('click', function() {
-                mobileMenu.classList.remove('active'); // Hide the menu
-            });
+                    // Display message to the user
+                    submissionMessage.textContent = "Your email client should open shortly with your report. Please click 'Send' to complete the submission.";
+                    submissionMessage.classList.remove('hidden', 'text-red-600');
+                    submissionMessage.classList.add('text-gray-600');
 
-            // Close modal/menu if clicked outside content
-            window.addEventListener('click', function(event) {
-                // Check if the click is outside both the mobile menu and the button
-                if (mobileMenu.classList.contains('active') && !mobileMenu.contains(event.target) && !mobileMenuButton.contains(event.target)) {
-                    mobileMenu.classList.remove('active');
+                    // Optionally, you might want to close the modal after a short delay
+                    // setTimeout(() => {
+                    //     reportModal.style.display = 'none';
+                    // }, 3000);
+                });
+
+                // --- Mobile Menu Logic ---
+                mobileMenuButton.addEventListener('click', function() {
+                    mobileMenu.classList.add('active'); // Show the menu
+                });
+
+                closeMobileMenuButton.addEventListener('click', function() {
+                    mobileMenu.classList.remove('active'); // Hide the menu
+                });
+
+                // Close modal/menu if clicked outside content
+                window.addEventListener('click', function(event) {
+                    // Check if the click is outside both the mobile menu and the button
+                    if (mobileMenu.classList.contains('active') && !mobileMenu.contains(event.target) && !mobileMenuButton.contains(event.target)) {
+                        mobileMenu.classList.remove('active');
+                    }
+                    // Close the report modal if clicked outside
+                    if (event.target === reportModal) {
+                        reportModal.style.display = 'none';
+                    }
+                });
+
+                // --- Add to Calendar Logic ---
+                addToCalendarBtn.addEventListener('click', function() {
+                    const eventTitle = "Delete Zalando Day: Reject Genocide!";
+                    const eventDescription = "Join the campaign by deleting your Zalando account and tweeting a screenshot with the message 'Reject Genocide!'. This event marks the start of Zalando's Cyberweek.";
+                    // This date is a placeholder for the fourth Thursday of November 2024.
+                    // Please update this date for future years.
+                    const eventDate = "20241128";
+
+                    const icsContent = `BEGIN:VCALENDAR
+                VERSION:2.0
+                BEGIN:VEVENT
+                DTSTART;VALUE=DATE:${eventDate}
+                DTEND;VALUE=DATE:${eventDate}
+                SUMMARY:${eventTitle}
+                DESCRIPTION:${eventDescription}
+                END:VEVENT
+                END:VCALENDAR`;
+
+                    // Create a Blob from the ICS content
+                    const blob = new Blob([icsContent], { type: 'text/calendar' });
+                    const url = URL.createObjectURL(blob);
+
+                    // Create a temporary link to trigger the download
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = 'Delete-Zalando-Day.ics';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url);
+                });
+
+                // --- Carousel Logic ---
+                function setupCarousel(carouselId) {
+                    const carousel = document.getElementById(carouselId);
+                    const dots = document.querySelectorAll(`[data-carousel-target="${carouselId}"]`);
+                    if (!carousel || dots.length === 0) return;
+
+                    const updateDots = () => {
+                        const scrollLeft = carousel.scrollLeft;
+                        const itemWidth = carousel.querySelector('.carousel-item').offsetWidth;
+                        const space = 32; // Corresponds to space-x-8
+                        const index = Math.round(scrollLeft / (itemWidth + space));
+
+                        dots.forEach((dot, i) => {
+                            dot.classList.remove('active');
+                            if (i === index) {
+                                dot.classList.add('active');
+                            }
+                        });
+                    };
+
+                    dots.forEach(dot => {
+                        dot.addEventListener('click', () => {
+                            const slideToIndex = dot.dataset.slideTo;
+                            const itemToScrollTo = carousel.querySelectorAll('.carousel-item')[slideToIndex];
+                            if (itemToScrollTo) {
+                                carousel.scrollLeft = itemToScrollTo.offsetLeft - (carousel.offsetWidth - itemToScrollTo.offsetWidth) / 2;
+                                updateDots();
+                            }
+                        });
+                    });
+
+                    carousel.addEventListener('scroll', () => {
+                        // Debounce the scroll event to avoid performance issues
+                        clearTimeout(carousel.scrollTimeout);
+                        carousel.scrollTimeout = setTimeout(updateDots, 100);
+                    });
+
+                    // Set initial active dot
+                    updateDots();
                 }
-                // Close the report modal if clicked outside
-                if (event.target === reportModal) {
-                    reportModal.style.display = 'none';
-                }
-            });
 
-            // --- Add to Calendar Logic ---
-            addToCalendarBtn.addEventListener('click', function() {
-                const eventTitle = "Delete Zalando Day: Reject Genocide!";
-                const eventDescription = "Join the campaign by deleting your Zalando account and tweeting a screenshot with the message 'Reject Genocide!'. This event marks the start of Zalando's Cyberweek.";
-                // This date is a placeholder for the fourth Thursday of November 2024.
-                // Please update this date for future years.
-                const eventDate = "20241128";
+                // Setup both carousels on window load
+                window.onload = function() {
+                    setupCarousel('recent-posts-carousel');
+                    setupCarousel('updates-carousel');
+                };
+            </script>
 
-                const icsContent = `BEGIN:VCALENDAR
-            VERSION:2.0
-            BEGIN:VEVENT
-            DTSTART;VALUE=DATE:${eventDate}
-            DTEND;VALUE=DATE:${eventDate}
-            SUMMARY:${eventTitle}
-            DESCRIPTION:${eventDescription}
-            END:VEVENT
-            END:VCALENDAR`;
-
-                // Create a Blob from the ICS content
-                const blob = new Blob([icsContent], { type: 'text/calendar' });
-                const url = URL.createObjectURL(blob);
-
-                // Create a temporary link to trigger the download
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = 'Delete-Zalando-Day.ics';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                URL.revokeObjectURL(url);
-            });
-        </script>
-    </body>
-    </html>
+        </body>
+        </html>
