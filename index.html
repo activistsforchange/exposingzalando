@@ -124,7 +124,6 @@
             left: 0;
             right: 0;
             bottom: 0;
-            /* Replace with your image URL */
             background-image: linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)), url('https://exposingzalando.org/content/IMG_0742.jpeg');
             background-size: cover;
             background-position: center;
@@ -132,19 +131,21 @@
             border-radius: inherit; /* Inherits the rounded corners */
         }
 
+        .mobile-header-bg {
+            background-image: linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)), url('https://exposingzalando.org/content/IMG_0742.jpeg');
+            background-size: cover;
+            background-position: center;
+        }
+        
         /* New custom style for mobile header background */
         @media (max-width: 768px) {
-            .mobile-header-bg {
-                background-image: linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)), url('https://exposingzalando.org/content/IMG_0742.jpeg');
-                background-size: cover;
-                background-position: center;
-            }
             .mobile-header-text {
                 /* Ensures text remains readable over the background image */
                 background-color: transparent;
                 position: relative;
                 z-index: 10;
             }
+        }   
     </style>
 </head>
 
@@ -164,7 +165,7 @@
         </div>
 
         <!-- Navigation Links (Hidden on small screens, shown on medium and up) -->
-        <nav class="hidden md:flex space-x-8 text-sm font-medium">
+        <nav class="hidden md:flex space-x-8 text-lg font-bold">
             <a href="#" class="text-gray-600 hover:text-red-600 transition-colors">HOME</a>
             <a href="#seccampaign" class="text-gray-600 hover:text-red-600 transition-colors">CAMPAIGN</a>
             <a href="#secnews" class="text-gray-600 hover:text-red-600 transition-colors">NEWS</a>
